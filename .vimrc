@@ -433,5 +433,5 @@ map <C-l> <C-w>l
 cmap w!! w !sudo tee % >/dev/null
 
 syntax enable
-#colorscheme solarized8_dark
+"colorscheme solarized8_dark
 set termguicolors
