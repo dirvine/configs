@@ -46,7 +46,7 @@ bindsym $mod+d exec dmenu_run
 bindsym $mod+l focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
-bindsym $mod+h focus right
+bindsym $mod+SemiColon focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
