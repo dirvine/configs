@@ -98,7 +98,8 @@ bindsym $mod+o mode "$mode_launcher"
 mode "$mode_launcher" {
     bindsym f exec firefox
     bindsym c exec code
-    bindsym v exec pavucontrol
+    bindsym s exec pavucontrol
+    bindsym b exec bluetooth-wizard
 
     bindsym Escape mode "default"
     bindsym Return mode "default"
@@ -121,7 +122,7 @@ for_window [class="Firefox"] move to workspace $ws1
 #for_window [class="terminal"] move to workspace $ws2
 # for_window [class="code"] move to workspace $ws3
 exec --no-startup-id firefox
-# exec --no-startup-id code
+exec --no-startup-id xfce4-power-manager
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
