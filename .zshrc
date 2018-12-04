@@ -1,23 +1,5 @@
 source ~/.antigen.zsh
-# Load various lib files
-
-antigen use oh-my-zsh
-#antigen-use prezto
-
-#
-# Antigen Bundles
-#
-antigen bundle kennethreitz/autoenv
-antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle git
-antigen bundle git-extras
-antigen bundle tmuxinator
-antigen bundle tmux
-antigen bundle rupa/z
-antigen bundle joel-porquet/zsh-dircolors-solarized.git
-antigen bundle ssh-agent
-
-antigen apply
+antigen init .antigenrc
 
 setupsolarized dircolors.ansi-dark
 # Uncomment the following line to use case-sensitive completion.
@@ -121,9 +103,6 @@ function apt-list-packages {
 export RPROMPT=`hostname`
 
 setxkbmap -option ctrl:nocaps
-# Antigen Theme
-#
-antigen theme muse
 
 #export PATH="/home/dirvine/Devel/.cargo/bin:$PATH"
 export EDITOR="vim"
