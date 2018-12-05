@@ -46,7 +46,7 @@ bindsym $mod+d exec dmenu_run
 bindsym $mod+l focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
-bindsym $mod+SemiColon focus right
+bindsym $mod+semicolon focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -100,6 +100,7 @@ mode "$mode_launcher" {
     bindsym c exec code
     bindsym s exec pavucontrol
     bindsym b exec bluetooth-wizard
+    bindsym n exec nm-applet
 
     bindsym Escape mode "default"
     bindsym Return mode "default"
@@ -118,11 +119,6 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
-for_window [class="Firefox"] move to workspace $ws1
-#for_window [class="terminal"] move to workspace $ws2
-# for_window [class="code"] move to workspace $ws3
-exec --no-startup-id firefox
-exec --no-startup-id xfce4-power-manager
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -203,3 +199,11 @@ bar {
         status_command i3status
         position top
 }
+
+### Launch some apps
+for_window [class="Firefox"] move to workspace $ws1
+#for_window [class="terminal"] move to workspace $ws2
+# for_window [class="code"] move to workspace $ws3
+exec --no-startup-id firefox
+exec --no-startup-id nm-applet
+exec --no-startup-id xfce4-power-manager
