@@ -65,7 +65,7 @@ REPORTTIME=10
 
 
 
-export PATH="/home/dirvine/.local/bin:/home/dirvine/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin/:/usr/local/games:/usr/games:/usr/sbin/:/home/dirvine/Devel/go/bin:/usr/local/nim/bin:/home/dirvine/node/bin/:/home/dirvine/sage:/home/dirvine/bin:~/.nvm:/home/dirvine/.cargo/bin"
+export PATH="/home/dirvine/.local/bin:/home/dirvine/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin/:/usr/local/games:/usr/games:/usr/sbin/:/usr/local/nim/bin:/home/dirvine/node/bin/:/home/dirvine/sage:/home/dirvine/bin:~/.nvm:/home/dirvine/.cargo/bin"
 alias -s rs=vim
 alias -s html=google-chrome
 

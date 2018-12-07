@@ -12,6 +12,9 @@ antigen bundle git
 antigen bundle git-extras
 antigen bundle tmuxinator
 antigen bundle tmux
+antigen bundle sudo
+antigen bundle vi-mode
+antigen bundle web-search
 antigen bundle rupa/z
 antigen bundle joel-porquet/zsh-dircolors-solarized.git
 antigen bundle ssh-agent
