@@ -1,5 +1,5 @@
 source ~/.antigen.zsh
-antigen init .antigenrc
+antigen init ~/.antigenrc
 
 setupsolarized dircolors.ansi-dark
 # Uncomment the following line to use case-sensitive completion.
