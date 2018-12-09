@@ -34,5 +34,5 @@ SET fish_pager_color_completion:\x1d
 SET fish_pager_color_description:B3A06D\x1eyellow
 SET fish_pager_color_prefix:white\x1e\x2d\x2dbold\x1e\x2d\x2dunderline
 SET fish_pager_color_progress:brwhite\x1e\x2d\x2dbackground\x3dcyan
-SET fish_user_abbreviations:gc\x20git\x20clone\x1egg\x20git\x20pull\x1egp\x20git\x20push\x1ecg\x20config\x20pull\x1ecp\x20config\x20push\x1ef\x20ranger
+SET fish_user_abbreviations:gc\x20git\x20clone\x1egg\x20git\x20pull\x1egp\x20git\x20push\x1ecg\x20config\x20pull\x1ef\x20ranger\x1eerase\x20cp
 SET fish_user_paths:/home/dirvine/\x2elocal/bin\x1e/home/dirvine/\x2envm\x1e/home/dirvine/\x2ecargo/bin\x1e/home/dirvine/\x2elocal/bin\x1e/home/dirvine/\x2envm\x1e/home/dirvine/\x2ecargo/bin
