@@ -33,17 +33,13 @@ call vam#ActivateAddons([
 \'github:jtratner/vim-flavored-markdown',
 \'github:mattn/webapi-vim',
 \'vim-signify',
-\'github:proyvind/Cpp11-Syntax-Support',
 \'delimitMate',
 \'github:elmcast/elm-vim',
 \'github:scrooloose/syntastic',
 \'github:christoomey/vim-tmux-navigator',
-\'github:honza/vim-snippets',
 \'github:xolox/vim-session',
 \'github:tomtom/tcomment_vim',
-\'github:scrooloose/nerdtree',
 \'github:oblitum/rainbow',
-\'github:thiagoalessio/rainbow_levels.vim',
 \'github:ap/vim-buftabline',
 \'github:lifepillar/vim-solarized8'])
 
@@ -91,16 +87,16 @@ au BufRead,BufNewFile *.elm set filetype=elm
 let g:elm_format_autosave = 1
 autocmd BufRead,BufNewFile Cargo.toml,Cargo.lock,*.rs compiler cargo | set makeprg=cargo | set errorformat=%Eerror%m,%Z\ %#-->\ %f:%l:%c
 autocmd BufWritePost *.rs | :RustFmt
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+"autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd QuickFixCmdPost *grep* cwindow "open quickfix after a grep
 autocmd bufwritepost *.js silent !standard-format -w %
 autocmd Filetype markdown set  wrap | set spell spelllang=en_gb | set tw=100
 " Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+"autocmd filetype css setlocal omnifunc=csscomplete#completecss
+"autocmd filetype html setlocal omnifunc=htmlcomplete#completetags
+"autocmd filetype javascript setlocal omnifunc=javascriptcomplete#completejs
+"autocmd filetype python setlocal omnifunc=pythoncomplete#complete
+"autocmd filetype xml setlocal omnifunc=xmlcomplete#completetags
 
 
 "#########Autocompletion###########
@@ -334,7 +330,6 @@ set showtabline=0       " do not want to see how many files are open
 set switchbuf=usetab       " switch to another window, possibly in another tab, if the buffer is currently displayed in another window
 
 " editor settings
-set esckeys             " map missed escape sequences (enables keypad keys)
 set ignorecase          " case insensitive searching
 set smartcase           " but become case sensitive if you type uppercase characters
 set smartindent         " smart auto indenting
@@ -360,7 +355,6 @@ set viminfo='20,\"500   " remember copy registers after quitting in the .viminfo
 set hidden              " remember undo after quitting
 set history=100          " keep 100 lines of command history
 set mouse=a             " use mouse in visual, normal,insert,command,help mode (shift key disables)
-set ttymouse=xterm2
 set undodir=~/.vim/undodir
 set undofile
 set undolevels=10000 "maximum number of changes that can be undone
@@ -405,13 +399,6 @@ if &term =~ "xterm\\|rxvt"
   autocmd VimLeave * silent !echo -ne "\033]112\007"
 endif
 
-" Tell vim to remember certain things when we exit
-"  '10  :  marks will be remembered for up to 10 previously edited files
-"  "100 :  will save up to 100 lines for each register
-"  :20  :  up to 20 lines of command-line history will be remembered
-"  %    :  saves and restores the buffer list
-"  n... :  where to save the viminfo files
-set viminfo='10,\"100,:20,%,n~/.viminfo
 au BufWinLeave *.* mkview!
 au BufWinEnter *.* silent loadview
 
