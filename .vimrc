@@ -18,11 +18,9 @@ endfun
 call SetupVAM()
 
 let g:racer_cmd ="/home/dirvine/.cargo/bin/racer"
-let $RUST_SRC_PATH="/home/dirvine/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src/"
 call vam#ActivateAddons([
-\'github:Valloric/YouCompleteMe',
+\'github:w0rp/ale',
 \'github:tpope/vim-fugitive',
-\'github:Shougo/neocomplete.vim',
 \'github:kana/vim-operator-user',
 \'github:mattn/gist-vim',
 \'github:int3/vim-extradite',
@@ -51,6 +49,7 @@ call vam#ActivateAddons([
 
 " "\'github:neomake/neomake',
 
+
 filetype plugin indent on
 set hidden
 nnoremap <C-N> :bnext<CR>
@@ -67,7 +66,17 @@ nnoremap <C-P> :bprev<CR>
         nmap <leader>0 <Plug>BufTabLine.Go(10)
         nmap <leader>11 <Plug>BufTabLine.Go(10)
         nmap <leader>12 <Plug>BufTabLine.Go(10)
-let g:rainbow_levels = [
+" ALE
+let g:ale_completion_enabled = 1
+let g:ale_linters = {}
+let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
+let g:ale_fix_on_save = 1
+let g:ale_rust_rls_executable = 'rls'
+let g:ale_rust_rls_toolchain = 'stable'
+let g:ale_linters['rust'] = ['rls']
+let g:ale_fixers['rust'] = ['rustfmt']
+
+        let g:rainbow_levels = [
     \{'ctermfg': 2, 'guifg': '#859900'},
     \{'ctermfg': 6, 'guifg': '#2aa198'},
     \{'ctermfg': 4, 'guifg': '#268bd2'},
@@ -82,7 +91,6 @@ au BufRead,BufNewFile *.elm set filetype=elm
 let g:elm_format_autosave = 1
 autocmd BufRead,BufNewFile Cargo.toml,Cargo.lock,*.rs compiler cargo | set makeprg=cargo | set errorformat=%Eerror%m,%Z\ %#-->\ %f:%l:%c
 autocmd BufWritePost *.rs | :RustFmt
-autocmd BufWritePost *.rs | :make +nightly check
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd QuickFixCmdPost *grep* cwindow "open quickfix after a grep
 autocmd bufwritepost *.js silent !standard-format -w %
@@ -158,7 +166,7 @@ let RUST_SRC_PATH=$RUST_SRC_PATH
 let g:ycm_rust_src_path = $RUST_SRC_PATH
 nnoremap <silent> <Leader>b :make build  <CR> <bar> :copen <CR>
 nnoremap <silent> <Leader>r :make run  <CR> <bar> :copen <CR>
-nnoremap <silent> <Leader>l :make +nightly test --no-run clippy <CR> <bar> :copen <CR>
+nnoremap <silent> <Leader>l :make test --no-run clippy <CR> <bar> :copen <CR>
 nnoremap <silent> <Leader>t :make test -- --nocapture <CR>
 let g:rustfmt_autosave = 0
 let g:rustfmt_fail_silently = 1
@@ -433,5 +441,5 @@ map <C-l> <C-w>l
 cmap w!! w !sudo tee % >/dev/null
 
 syntax enable
-"colorscheme solarized8_dark
 set termguicolors
+colorscheme solarized8
