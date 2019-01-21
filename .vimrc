@@ -20,6 +20,7 @@ call SetupVAM()
 let g:racer_cmd ="/home/dirvine/.cargo/bin/racer"
 call vam#ActivateAddons([
 \'github:w0rp/ale',
+\'github:scrooloose/nerdtree',
 \'github:tpope/vim-fugitive',
 \'github:kana/vim-operator-user',
 \'github:mattn/gist-vim',
@@ -71,6 +72,7 @@ let g:ale_rust_rls_executable = 'rls'
 let g:ale_rust_rls_toolchain = 'stable'
 let g:ale_linters['rust'] = ['rls']
 let g:ale_fixers['rust'] = ['rustfmt']
+let g:ale_set_ballons = 1
 
         let g:rainbow_levels = [
     \{'ctermfg': 2, 'guifg': '#859900'},
@@ -371,7 +373,7 @@ nmap <F2> :cnext <cr>
 nmap <F3> :cprev <cr>
 map <F4> :cclose <cr> :lclose <cr>
 nmap <F5> :NERDTreeToggle  <CR>
-nmap <F6> zi <cr>
+nmap <F6> :ALEHover <cr>
 nmap <F7> :setlocal spell! spelllang=en_gb<CR>
 nnoremap j gj
 nnoremap k gk
