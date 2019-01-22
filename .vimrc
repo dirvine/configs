@@ -1,51 +1,156 @@
+" Fish doesn't play all that well with others
+set shell=/bin/bash
+let mapleader = "\<Space>"
+
+" =============================================================================
+" # PLUGINS
+" =============================================================================
+set nocompatible
 filetype off
-fun! SetupVAM()
-  let c = get(g:, 'vim_addon_manager', {})
-  let g:vim_addon_manager = c
-  let c.plugin_root_dir = expand('$HOME', 1) . '/.vim/vim-addons'
-  " most used options you may want to use:
-  let c.log_to_buf = 1
-  let c.auto_install = 1
-  let c.shell_commands_run_method = 'system'
-  let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
-  if !isdirectory(c.plugin_root_dir.'/vim-addon-manager/autoload')
-    execute '!git clone --depth=1 git://github.com/MarcWeber/vim-addon-manager '
-        \       shellescape(c.plugin_root_dir.'/vim-addon-manager', 1)
-  endif
-  call vam#ActivateAddons([], {'auto_install' : 0})
-endfun
 
-call SetupVAM()
+" Install plug if not already installed
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source ~/.vimrc
+endif
 
-let g:racer_cmd ="/home/dirvine/.cargo/bin/racer"
-call vam#ActivateAddons([
-\'github:w0rp/ale',
-\'github:scrooloose/nerdtree',
-\'github:tpope/vim-fugitive',
-\'github:kana/vim-operator-user',
-\'github:mattn/gist-vim',
-\'github:int3/vim-extradite',
-\'github:kien/ctrlp.vim',
-\'github:rust-lang/rust.vim',
-\'github:vim-airline/vim-airline-themes',
-\'github:bling/vim-airline',
-\'github:zah/nimrod.vim',
-\'github:terryma/vim-multiple-cursors',
-\'github:jtratner/vim-flavored-markdown',
-\'github:mattn/webapi-vim',
-\'vim-signify',
-\'delimitMate',
-\'github:elmcast/elm-vim',
-\'github:scrooloose/syntastic',
-\'github:christoomey/vim-tmux-navigator',
-\'github:xolox/vim-session',
-\'github:tomtom/tcomment_vim',
-\'github:oblitum/rainbow',
-\'github:ap/vim-buftabline',
-\'github:lifepillar/vim-solarized8'])
+call plug#begin('~/.vim/plugged')
 
-" "\'github:neomake/neomake',
+Plug 'w0rp/ale'
+Plug 'mhinz/vim-signify'
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+Plug 'Shougo/echodoc.vim'
+Plug 'dag/vim-fish'
+Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-fugitive'
+Plug 'kana/vim-operator-user'
+Plug 'mattn/gist-vim'
+Plug 'int3/vim-extradite'
+Plug 'kien/ctrlp.vim'
+Plug 'rust-lang/rust.vim'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'bling/vim-airline'
+Plug 'zah/nimrod.vim'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'jtratner/vim-flavored-markdown'
+Plug 'mattn/webapi-vim'
+Plug 'elmcast/elm-vim'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-session'
+Plug 'tomtom/tcomment_vim'
+Plug 'oblitum/rainbow'
+Plug 'ap/vim-buftabline'
+Plug 'lifepillar/vim-solarized8'
 
+
+" Initialize plugin system
+call plug#end()
+
+if executable('ag')
+	set grepprg=ag\ --nogroup\ --nocolor
+endif
+if executable('rg')
+	set grepprg=rg\ --no-heading\ --vimgrep
+	set grepformat=%f:%l:%c:%m
+endif
+
+
+" Linter
+let g:ale_sign_column_always = 1
+" only lint on save
+let g:ale_lint_on_text_changed = 1
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_enter = 1
+let g:ale_rust_cargo_use_check = 1
+let g:ale_rust_cargo_check_all_targets = 1
+" ALE
+let g:ale_completion_enabled = 1
+let g:ale_linters = {}
+let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
+let g:ale_fix_on_save = 1
+let g:ale_rust_rls_executable = 'rls'
+let g:ale_rust_rls_toolchain = 'stable'
+let g:ale_linters['rust'] = ['rls']
+let g:ale_fixers['rust'] = ['rustfmt']
+let g:ale_set_ballons = 1
+
+" Open hotkeys
+map <C-p> :Files<CR>
+nmap <leader>; :Buffers<CR>
+
+" Quick-save
+nmap <leader>w :w<CR>
+
+" =============================================================================
+" # Keyboard shortcuts
+" =============================================================================
+" ; as :
+nnoremap ; :
+
+" Ctrl+c and Ctrl+j as Esc
+inoremap <C-j> <Esc>
+vnoremap <C-j> <Esc>
+inoremap <C-c> <Esc>
+vnoremap <C-c> <Esc>
+
+" Suspend with Ctrl+f
+inoremap <C-f> :sus<cr>
+vnoremap <C-f> :sus<cr>
+nnoremap <C-f> :sus<cr>
+
+" Jump to start and end of line using the home row keys
+map H ^
+map L $
+
+" No arrow keys --- force yourself to use the home row
+nnoremap <up> <nop>
+nnoremap <down> <nop>
+inoremap <up> <nop>
+inoremap <down> <nop>
+inoremap <left> <nop>
+inoremap <right> <nop>
+
+" Left and right can switch buffers
+nnoremap <left> :bp<CR>
+nnoremap <right> :bn<CR>
+
+" language server protocol
+let g:LanguageClient_settingsPath = "/home/dirvine/.vim/settings.json"
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['env', 'CARGO_TARGET_DIR=/home/dirvine/cargo-target/rls', 'rls'],
+    \ }
+let g:LanguageClient_autoStart = 1
+nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> <F7> :call LanguageClient_textDocument_rename()<CR>
+
+let g:rustfmt_command = "rustfmt"
+let g:rustfmt_autosave = 1
+let g:rustfmt_emit_files = 1
+let g:rustfmt_fail_silently = 0
+let g:rust_clip_command = 'xclip -selection clipboard'
+let $RUST_SRC_PATH = systemlist("rustc --print sysroot")[0] . "/lib/rustlib/src/rust/src"
+
+" Completion
+set completeopt=noinsert,menuone,noselect
+" tab to select
+" and don't hijack my enter key
+inoremap <expr><Tab> (pumvisible()?(empty(v:completed_item)?"\<C-n>":"\<C-y>"):"\<Tab>")
+inoremap <expr><CR> (pumvisible()?(empty(v:completed_item)?"\<CR>\<CR>":"\<C-y>"):"\<CR>")
+
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+    \ 'python': ['/usr/local/bin/pyls'],
+    \ }
+
+nnoremap <F9> :call LanguageClient_contextMenu()<CR>
 
 filetype plugin indent on
 set hidden
@@ -63,16 +168,6 @@ nnoremap <C-P> :bprev<CR>
         nmap <leader>0 <Plug>BufTabLine.Go(10)
         nmap <leader>11 <Plug>BufTabLine.Go(10)
         nmap <leader>12 <Plug>BufTabLine.Go(10)
-" ALE
-let g:ale_completion_enabled = 1
-let g:ale_linters = {}
-let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
-let g:ale_fix_on_save = 1
-let g:ale_rust_rls_executable = 'rls'
-let g:ale_rust_rls_toolchain = 'stable'
-let g:ale_linters['rust'] = ['rls']
-let g:ale_fixers['rust'] = ['rustfmt']
-let g:ale_set_ballons = 1
 
         let g:rainbow_levels = [
     \{'ctermfg': 2, 'guifg': '#859900'},
@@ -93,70 +188,8 @@ autocmd BufWritePost *.rs | :RustFmt
 autocmd QuickFixCmdPost *grep* cwindow "open quickfix after a grep
 autocmd bufwritepost *.js silent !standard-format -w %
 autocmd Filetype markdown set  wrap | set spell spelllang=en_gb | set tw=100
-" Enable omni completion.
-"autocmd filetype css setlocal omnifunc=csscomplete#completecss
-"autocmd filetype html setlocal omnifunc=htmlcomplete#completetags
-"autocmd filetype javascript setlocal omnifunc=javascriptcomplete#completejs
-"autocmd filetype python setlocal omnifunc=pythoncomplete#complete
-"autocmd filetype xml setlocal omnifunc=xmlcomplete#completetags
-
-
-"#########Autocompletion###########
-" let g:acp_enableAtStartup = 1
-" let g:neocomplete#enable_at_startup = 1
-" let g:neocomplete#enable_smart_case = 1
-" " Set minimum syntax keyword length.
-" let g:neocomplete#sources#syntax#min_keyword_length = 2
-" let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-
-" Define dictionary.
-" let g:neocomplete#sources#dictionary#dictionaries = {
-"     \ 'default' : '',
-"     \ 'vimshell' : $HOME.'/.vimshell_hist',
-"     \ 'scheme' : $HOME.'/.gosh_completions'
-"         \ }
-"
-" Define keyword.
-" if !exists('g:neocomplete#keyword_patterns')
-"     let g:neocomplete#keyword_patterns = {}
-" endif
-" let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-"
-" " Plugin key-mappings.
-" inoremap <expr><C-g>     neocomplete#undo_completion()
-" inoremap <expr><C-l>     neocomplete#complete_common_string()
-"
-" " Recommended key-mappings.
-" " <CR>: close popup and save indent.
-" inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-" function! s:my_cr_function()
-"   " return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-"   " For no inserting <CR> key.
-"   return pumvisible() ? "\<C-y>" : "\<CR>"
-" endfunction
-" " <TAB>: completion.
-" inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" " <C-h>, <BS>: close popup and delete backword char.
-" inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-" inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 " " Close popup by <Space>.
 " "inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-"
-" " AutoComplPop like behavior.
-" let g:neocomplete#enable_auto_select = 0
-"
-" " Enable heavy omni completion.
-" if !exists('g:neocomplete#sources#omni#input_patterns')
-"   let g:neocomplete#sources#omni#input_patterns = {}
-" endif
-" let g:neocomplete#sources#omni#input_patterns.rust = '[^.[:digit:] *\t]\%(\.\|\::\)\%(\h\w*\)\?'
-" let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-" let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-" let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-"
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-" let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
 " ###################  RUST  #########################
 
@@ -248,29 +281,29 @@ nmap ; :CtrlPBuffer<CR>
 nmap <leader>a :CtrlPTag<CR>
 nnoremap <silent> <Leader>n :set nonumber!<CR>
 
-let g:syntastic_cpp_check_header = 0
-" let g:syntastic_cpp_config_file = '.syntastic_cpp_config'
-let g:syntastic_cpp_remove_include_errors = 1
-let g:syntastic_cpp_compiler = 'clang++'
-let g:syntastic_check_on_open = 1
-let g:syntastic_enable_signs = 1 " Put errors on left side
-let g:syntastic_auto_loc_list = 0 " Only show errors when I ask
-" let g:syntastic_disabled_filetypes = ['html', 'js']
-let g:syntastic_javascript_checkers = ['standard']
-hi SpellBad ctermfg=007 ctermbg=000
-hi SpellCap ctermfg=007 ctermbg=000
-if has('unix')
-  let g:syntastic_error_symbol='★'
-  let g:syntastic_style_error_symbol='>'
-  let g:syntastic_warning_symbol='⚠'
-  let g:syntastic_style_warning_symbol='>'
-else
-  let g:syntastic_error_symbol='!'
-  let g:syntastic_style_error_symbol='>'
-  let g:syntastic_warning_symbol='.'
-  let g:syntastic_style_warning_symbol='>'
-endif
-
+" let g:syntastic_cpp_check_header = 0
+" " let g:syntastic_cpp_config_file = '.syntastic_cpp_config'
+" let g:syntastic_cpp_remove_include_errors = 1
+" let g:syntastic_cpp_compiler = 'clang++'
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_enable_signs = 1 " Put errors on left side
+" let g:syntastic_auto_loc_list = 0 " Only show errors when I ask
+" " let g:syntastic_disabled_filetypes = ['html', 'js']
+" let g:syntastic_javascript_checkers = ['standard']
+" hi SpellBad ctermfg=007 ctermbg=000
+" hi SpellCap ctermfg=007 ctermbg=000
+" if has('unix')
+"   let g:syntastic_error_symbol='★'
+"   let g:syntastic_style_error_symbol='>'
+"   let g:syntastic_warning_symbol='⚠'
+"   let g:syntastic_style_warning_symbol='>'
+" else
+"   let g:syntastic_error_symbol='!'
+"   let g:syntastic_style_error_symbol='>'
+"   let g:syntastic_warning_symbol='.'
+"   let g:syntastic_style_warning_symbol='>'
+" endif
+"
 " au FileType c,cpp,perl let b:delimitMate_eol_marker = ";"
 au FileType c,cpp let b:delimitMate_matchpairs = "(:),[:],{:}"
 
@@ -374,7 +407,7 @@ nmap <F3> :cprev <cr>
 map <F4> :cclose <cr> :lclose <cr>
 nmap <F5> :NERDTreeToggle  <CR>
 nmap <F6> :ALEHover <cr>
-nmap <F7> :setlocal spell! spelllang=en_gb<CR>
+"nmap <F7> :setlocal spell! spelllang=en_gb<CR>
 nnoremap j gj
 nnoremap k gk
 noremap gr :diffget //3<cr>
@@ -400,9 +433,6 @@ if &term =~ "xterm\\|rxvt"
    " reset cursor when vim exits
   autocmd VimLeave * silent !echo -ne "\033]112\007"
 endif
-
-au BufWinLeave *.* mkview!
-au BufWinEnter *.* silent loadview
 
 au BufWritePost *.* mksession! ~/session.vim
 noremap <C-s> :source ~/session.vim
