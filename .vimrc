@@ -16,7 +16,9 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
-
+if has("nvim")
+  Plug 'floobits/floobits-neovim'
+endif
 Plug 'w0rp/ale'
 Plug 'mhinz/vim-signify'
 Plug 'autozimu/LanguageClient-neovim', {
