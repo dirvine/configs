@@ -18,7 +18,7 @@ endif
 call plug#begin('~/.vim/plugged')
 
 Plug 'w0rp/ale'
-
+Plug 'mhinz/vim-signify'
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
@@ -51,9 +51,6 @@ Plug 'lifepillar/vim-solarized8'
 " Initialize plugin system
 call plug#end()
 
-""\'github:scrooloose/syntastic',
-" "\'github:neomake/neomake',
-
 if executable('ag')
 	set grepprg=ag\ --nogroup\ --nocolor
 endif
@@ -71,6 +68,16 @@ let g:ale_lint_on_save = 1
 let g:ale_lint_on_enter = 1
 let g:ale_rust_cargo_use_check = 1
 let g:ale_rust_cargo_check_all_targets = 1
+" ALE
+let g:ale_completion_enabled = 1
+let g:ale_linters = {}
+let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
+let g:ale_fix_on_save = 1
+let g:ale_rust_rls_executable = 'rls'
+let g:ale_rust_rls_toolchain = 'stable'
+let g:ale_linters['rust'] = ['rls']
+let g:ale_fixers['rust'] = ['rustfmt']
+let g:ale_set_ballons = 1
 
 " Open hotkeys
 map <C-p> :Files<CR>
@@ -122,15 +129,11 @@ nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 nnoremap <silent> <F7> :call LanguageClient_textDocument_rename()<CR>
 
-" racer + rust
-" https://github.com/rust-lang/rust.vim/issues/192
-let g:rustfmt_command = "rustfmt +nightly"
+let g:rustfmt_command = "rustfmt"
 let g:rustfmt_autosave = 1
 let g:rustfmt_emit_files = 1
 let g:rustfmt_fail_silently = 0
 let g:rust_clip_command = 'xclip -selection clipboard'
-"let g:racer_cmd = "/usr/bin/racer"
-"let g:racer_experimental_completer = 1
 let $RUST_SRC_PATH = systemlist("rustc --print sysroot")[0] . "/lib/rustlib/src/rust/src"
 
 " Completion
@@ -165,16 +168,6 @@ nnoremap <C-P> :bprev<CR>
         nmap <leader>0 <Plug>BufTabLine.Go(10)
         nmap <leader>11 <Plug>BufTabLine.Go(10)
         nmap <leader>12 <Plug>BufTabLine.Go(10)
-" ALE
-let g:ale_completion_enabled = 1
-let g:ale_linters = {}
-let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
-let g:ale_fix_on_save = 1
-let g:ale_rust_rls_executable = 'rls'
-let g:ale_rust_rls_toolchain = 'stable'
-let g:ale_linters['rust'] = ['rls']
-let g:ale_fixers['rust'] = ['rustfmt']
-let g:ale_set_ballons = 1
 
         let g:rainbow_levels = [
     \{'ctermfg': 2, 'guifg': '#859900'},
@@ -440,9 +433,6 @@ if &term =~ "xterm\\|rxvt"
    " reset cursor when vim exits
   autocmd VimLeave * silent !echo -ne "\033]112\007"
 endif
-
-au BufWinLeave *.* mkview!
-au BufWinEnter *.* silent loadview
 
 au BufWritePost *.* mksession! ~/session.vim
 noremap <C-s> :source ~/session.vim
