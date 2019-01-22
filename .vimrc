@@ -431,4 +431,5 @@ cmap w!! w !sudo tee % >/dev/null
 
 syntax enable
 set termguicolors
+set bg=dark
 colorscheme solarized8
