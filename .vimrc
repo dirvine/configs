@@ -16,27 +16,38 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
+" Pair programmign and chat
 if has("nvim")
   Plug 'floobits/floobits-neovim'
 endif
+" linter and more
 Plug 'w0rp/ale'
+" See git status in gutter
 Plug 'mhinz/vim-signify'
+" for rls etc.
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
     \ }
+" Search for a project root (.git etc) and make that home.
+Plug 'airblade/vim-rooter'
+"Displays function signatures from completions in the command line.
 Plug 'Shougo/echodoc.vim'
+"Vim support for editing fish scripts
 Plug 'dag/vim-fish'
+" File explorere
 Plug 'scrooloose/nerdtree'
+" Git helpert
 Plug 'tpope/vim-fugitive'
 Plug 'kana/vim-operator-user'
 Plug 'mattn/gist-vim'
 Plug 'int3/vim-extradite'
+" file / buffer find
 Plug 'kien/ctrlp.vim'
+" rust helpers
 Plug 'rust-lang/rust.vim'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'bling/vim-airline'
-Plug 'zah/nimrod.vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'jtratner/vim-flavored-markdown'
 Plug 'mattn/webapi-vim'
@@ -142,8 +153,8 @@ let $RUST_SRC_PATH = systemlist("rustc --print sysroot")[0] . "/lib/rustlib/src/
 set completeopt=noinsert,menuone,noselect
 " tab to select
 " and don't hijack my enter key
-inoremap <expr><Tab> (pumvisible()?(empty(v:completed_item)?"\<C-n>":"\<C-y>"):"\<Tab>")
-inoremap <expr><CR> (pumvisible()?(empty(v:completed_item)?"\<CR>\<CR>":"\<C-y>"):"\<CR>")
+"inoremap <expr><Tab> (pumvisible()?(empty(v:completed_item)?"\<C-n>":"\<C-y>"):"\<Tab>")
+"inoremap <expr><CR> (pumvisible()?(empty(v:completed_item)?"\<CR>\<CR>":"\<C-y>"):"\<CR>")
 
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
@@ -238,32 +249,7 @@ let g:airline_right_sep=''
 let g:airline_detect_paste=1
 let g:airline#extensions#hunks#enabled = 1
 let g:airline_powerline_fonts = 0
-" After you've marked all your locations with Ctrl-n, you can change the visual selection with normal Vim motion commands in Visual mode. You could go to Normal mode
-" by pressing v and wield your motion commands there. Single key command to switch to Insert mode such as c or s from Visual mode or i, a, I, A in Normal mode should
-" work without any issues.
-"
-" At any time, you can press <Esc> to exit back to regular Vim.
-"
-" Two additional keys are also mapped:
-"
-" Ctrl-p in Visual mode will remove the current virtual cursor and go back to the previous virtual cursor location. This is useful if you are trigger happy with Ctrl-n
-" and accidentally went too far.
-" Ctrl-x in Visual mode will remove the current virtual cursor and skip to the next virtual cursor location. This is useful if you don't want the current selection to
-" be a candidate to operate on later.
-" ###################### nim ############################
-fun! JumpToDef()
-  if exists("*GotoDefinition_" . &filetype)
-call GotoDefinition_{&filetype}()
-  else
-  exe "norm! \<C-]>"
-  endif
-  endf
-" ########################################################
-  " Jump to tag
-  nn <M-g> :call JumpToDef()<cr>
-  ino <M-g> <esc>:call JumpToDef()<cr>i
 
-let g:ctags_statusline=1
 
 set spelllang=en_gb
 
@@ -282,32 +268,6 @@ nnoremap <silent> <Leader>p :CtrlP <CR>
 nmap ; :CtrlPBuffer<CR>
 nmap <leader>a :CtrlPTag<CR>
 nnoremap <silent> <Leader>n :set nonumber!<CR>
-
-" let g:syntastic_cpp_check_header = 0
-" " let g:syntastic_cpp_config_file = '.syntastic_cpp_config'
-" let g:syntastic_cpp_remove_include_errors = 1
-" let g:syntastic_cpp_compiler = 'clang++'
-" let g:syntastic_check_on_open = 1
-" let g:syntastic_enable_signs = 1 " Put errors on left side
-" let g:syntastic_auto_loc_list = 0 " Only show errors when I ask
-" " let g:syntastic_disabled_filetypes = ['html', 'js']
-" let g:syntastic_javascript_checkers = ['standard']
-" hi SpellBad ctermfg=007 ctermbg=000
-" hi SpellCap ctermfg=007 ctermbg=000
-" if has('unix')
-"   let g:syntastic_error_symbol='★'
-"   let g:syntastic_style_error_symbol='>'
-"   let g:syntastic_warning_symbol='⚠'
-"   let g:syntastic_style_warning_symbol='>'
-" else
-"   let g:syntastic_error_symbol='!'
-"   let g:syntastic_style_error_symbol='>'
-"   let g:syntastic_warning_symbol='.'
-"   let g:syntastic_style_warning_symbol='>'
-" endif
-"
-" au FileType c,cpp,perl let b:delimitMate_eol_marker = ";"
-au FileType c,cpp let b:delimitMate_matchpairs = "(:),[:],{:}"
 
 
 let g:tmux_navigator_save_on_switch = 1
@@ -404,6 +364,7 @@ set splitright
 set splitbelow
 
 "######################### Function Key Mappings ####################
+nmap <F1> :ALEFix <cr>
 nmap <F2> :cnext <cr>
 nmap <F3> :cprev <cr>
 map <F4> :cclose <cr> :lclose <cr>
