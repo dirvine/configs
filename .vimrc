@@ -20,6 +20,22 @@ call plug#begin('~/.vim/plugged')
 if has("nvim")
   Plug 'floobits/floobits-neovim'
 endif
+" spell thesaurus etc.
+Plug 'reedes/vim-lexical'
+" full screen writing
+Plug 'junegunn/goyo.vim'
+" Soft wrap etc.
+Plug 'reedes/vim-pencil'
+Plug 'reedes/vim-colors-pencil'
+" autocorrect
+Plug 'reedes/vim-litecorrect'
+Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-abolish'
+"nicer quotes when writing prose
+" Plug 'kana/vim-textobject-user'
+" Plug 'reedes/vim-textobj-quote'
+" Plug 'reedes/vim-textobj-sentence'
+
 " linter and more
 Plug 'w0rp/ale'
 " See git status in gutter
@@ -37,10 +53,14 @@ Plug 'Shougo/echodoc.vim'
 Plug 'dag/vim-fish'
 " File explorere
 Plug 'scrooloose/nerdtree'
-" Git helpert
+" Git helper
 Plug 'tpope/vim-fugitive'
-Plug 'kana/vim-operator-user'
-Plug 'mattn/gist-vim'
+"A git commit browser for vim. Extends fugitive.vim
+" :Extradite
+" oh, ov, and ot edit the revision under the cursor in a new horizontal split / vertical split / tab respectively.
+" dh, dv, and dt diff the current file against the revision under the cursor in a new horizontal split / vertical split / tab respectively.
+" t toggles the visibility of the file diff buffer.
+" q closes the Extradite buffer.
 Plug 'int3/vim-extradite'
 " file / buffer find
 Plug 'kien/ctrlp.vim'
@@ -48,17 +68,19 @@ Plug 'kien/ctrlp.vim'
 Plug 'rust-lang/rust.vim'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'bling/vim-airline'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'jtratner/vim-flavored-markdown'
 Plug 'mattn/webapi-vim'
 Plug 'elmcast/elm-vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-session'
+" Code commenter (leader c
 Plug 'tomtom/tcomment_vim'
 Plug 'oblitum/rainbow'
-Plug 'ap/vim-buftabline'
+" Plug 'ap/vim-buftabline'
 Plug 'lifepillar/vim-solarized8'
+" In quickfix :Enmasse will open a buffer with each line form each file in it.
+Plug 'Olical/vim-enmasse'
+
 
 
 " Initialize plugin system
@@ -99,6 +121,8 @@ nmap <leader>; :Buffers<CR>
 " Quick-save
 nmap <leader>w :w<CR>
 
+" comment
+map <leader>c :TComment<CR>
 " =============================================================================
 " # Keyboard shortcuts
 " =============================================================================
@@ -200,7 +224,16 @@ autocmd BufWritePost *.rs | :RustFmt
 "autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd QuickFixCmdPost *grep* cwindow "open quickfix after a grep
 autocmd bufwritepost *.js silent !standard-format -w %
-autocmd Filetype markdown set  wrap | set spell spelllang=en_gb | set tw=100
+autocmd Filetype markdown set  wrap | set spell spelllang=en_gb | set tw=100 | colorscheme pencil | :Goyo <CR>
+
+augroup pencil
+  autocmd!
+  autocmd FileType markdown,mkd call pencil#init()
+                            \ | call lexical#init()
+                            \ | call litecorrect#init()
+                            " \ | call textobj#quote#init()
+                            " \ | call textobj#sentence#init()
+augroup END
 " " Close popup by <Space>.
 inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
 
