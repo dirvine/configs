@@ -35,6 +35,7 @@ Plug 'tpope/vim-abolish'
 " Plug 'kana/vim-textobject-user'
 " Plug 'reedes/vim-textobj-quote'
 " Plug 'reedes/vim-textobj-sentence'
+Plug 'junegunn/limelight.vim'
 
 " linter and more
 Plug 'w0rp/ale'
@@ -233,7 +234,11 @@ augroup pencil
                             \ | call litecorrect#init()
                             " \ | call textobj#quote#init()
                             " \ | call textobj#sentence#init()
+
 augroup END
+
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
 " " Close popup by <Space>.
 inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
 
