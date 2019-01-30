@@ -18,19 +18,19 @@ endif
 call plug#begin('~/.vim/plugged')
 " Pair programmign and chat
 if has("nvim")
-  Plug 'floobits/floobits-neovim'
+  "Plug 'floobits/floobits-neovim'
 endif
 " spell thesaurus etc.
-" Plug 'reedes/vim-lexical'
+Plug 'reedes/vim-lexical'
 " full screen writing
 Plug 'junegunn/goyo.vim'
 " Soft wrap etc.
 Plug 'reedes/vim-pencil'
 Plug 'reedes/vim-colors-pencil'
 " autocorrect
-" Plug 'reedes/vim-litecorrect'
-" Plug 'tpope/vim-markdown'
-" Plug 'tpope/vim-abolish'
+Plug 'reedes/vim-litecorrect'
+Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-abolish'
 "nicer quotes when writing prose
 " Plug 'kana/vim-textobject-user'
 " Plug 'reedes/vim-textobj-quote'
@@ -176,6 +176,7 @@ let $RUST_SRC_PATH = systemlist("rustc --print sysroot")[0] . "/lib/rustlib/src/
 
 " Completion
 set completeopt=noinsert,menuone,noselect
+set complete+=kspell
 " tab to select
 " and don't hijack my enter key
 "inoremap <expr><Tab> (pumvisible()?(empty(v:completed_item)?"\<C-n>":"\<C-y>"):"\<Tab>")
@@ -220,20 +221,30 @@ au BufNewFile,BufRead *.rs set filetype=rust
 au BufRead,BufNewFile *.md set filetype=markdown
 au BufRead,BufNewFile *.elm set filetype=elm
 let g:elm_format_autosave = 1
-autocmd BufRead,BufNewFile Cargo.toml,Cargo.lock,*.rs compiler cargo | set makeprg=cargo | set errorformat=%Eerror%m,%Z\ %#-->\ %f:%l:%c
-autocmd BufWritePost *.rs | :RustFmt
+" autocmd BufRead,BufNewFile Cargo.toml,Cargo.lock,*.rs compiler cargo | set makeprg=cargo | set errorformat=%Eerror%m,%Z\ %#-->\ %f:%l:%c
+" autocmd BufWritePost *.rs | :RustFmt
 "autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd QuickFixCmdPost *grep* cwindow "open quickfix after a grep
 autocmd bufwritepost *.js silent !standard-format -w %
-autocmd Filetype markdown set  wrap | set spell spelllang=en_gb | set tw=100 | colorscheme pencil | :Goyo <CR>
+autocmd Filetype markdown setlocal spell spelllang=en_gb | colorscheme pencil
 
 augroup pencil
   autocmd!
   autocmd FileType markdown,mkd call pencil#init()
-                            " \ | call lexical#init()
-                            " \ | call litecorrect#init()
-                            " \ | call textobj#quote#init()
-                            " \ | call textobj#sentence#init()
+                            \ | setl spell spl=en_gb fdl=4 noru nonu nornu
+                            \ | setl fdo+=search
+                            \ | call lexical#init()
+                            \ | call litecorrect#init()
+  autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
+                            \   call pencil#init({'wrap': 'hard', 'textwidth': 72})
+                            \ | call litecorrect#init()
+                            \ | setl spell spl=en_us et sw=2 ts=2 noai
+  autocmd Filetype mail         call pencil#init({'wrap': 'hard', 'textwidth': 60})
+                            \ | call litecorrect#init()
+                            \ | setl spell spl=en_us et sw=2 ts=2 noai nonu nornu
+  autocmd Filetype html,xml     call pencil#init({'wrap': 'soft'})
+                            \ | call litecorrect#init()
+                            \ | setl spell spl=en_us et sw=2 ts=2
 
 augroup END
 
