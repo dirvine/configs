@@ -21,16 +21,16 @@ if has("nvim")
   Plug 'floobits/floobits-neovim'
 endif
 " spell thesaurus etc.
-Plug 'reedes/vim-lexical'
+" Plug 'reedes/vim-lexical'
 " full screen writing
 Plug 'junegunn/goyo.vim'
 " Soft wrap etc.
 Plug 'reedes/vim-pencil'
 Plug 'reedes/vim-colors-pencil'
 " autocorrect
-Plug 'reedes/vim-litecorrect'
-Plug 'tpope/vim-markdown'
-Plug 'tpope/vim-abolish'
+" Plug 'reedes/vim-litecorrect'
+" Plug 'tpope/vim-markdown'
+" Plug 'tpope/vim-abolish'
 "nicer quotes when writing prose
 " Plug 'kana/vim-textobject-user'
 " Plug 'reedes/vim-textobj-quote'
@@ -230,8 +230,8 @@ autocmd Filetype markdown set  wrap | set spell spelllang=en_gb | set tw=100 | c
 augroup pencil
   autocmd!
   autocmd FileType markdown,mkd call pencil#init()
-                            \ | call lexical#init()
-                            \ | call litecorrect#init()
+                            " \ | call lexical#init()
+                            " \ | call litecorrect#init()
                             " \ | call textobj#quote#init()
                             " \ | call textobj#sentence#init()
 
