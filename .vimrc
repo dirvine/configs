@@ -26,7 +26,7 @@ Plug 'reedes/vim-lexical'
 Plug 'junegunn/goyo.vim'
 " Soft wrap etc.
 Plug 'reedes/vim-pencil'
-Plug 'reedes/vim-colors-pencil'
+" Plug 'reedes/vim-colors-pencil'
 " autocorrect
 Plug 'reedes/vim-litecorrect'
 Plug 'tpope/vim-markdown'
@@ -226,7 +226,7 @@ let g:elm_format_autosave = 1
 "autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd QuickFixCmdPost *grep* cwindow "open quickfix after a grep
 autocmd bufwritepost *.js silent !standard-format -w %
-autocmd Filetype markdown setlocal spell spelllang=en_gb | colorscheme pencil
+autocmd Filetype markdown setlocal spell spelllang=en_gb
 
 augroup pencil
   autocmd!
@@ -248,7 +248,7 @@ augroup pencil
 
 augroup END
 
-autocmd! User GoyoEnter Limelight
+autocmd! User GoyoEnter Limelight | set spell
 autocmd! User GoyoLeave Limelight!
 " " Close popup by <Space>.
 inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
