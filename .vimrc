@@ -226,7 +226,7 @@ let g:elm_format_autosave = 1
 "autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd QuickFixCmdPost *grep* cwindow "open quickfix after a grep
 autocmd bufwritepost *.js silent !standard-format -w %
-autocmd Filetype markdown setlocal spell spelllang=en_gb
+autocmd Filetype markdown :augroup pencil "setlocal spell spelllang=en_gb
 
 augroup pencil
   autocmd!
