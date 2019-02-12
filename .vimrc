@@ -22,6 +22,8 @@ if has("nvim")
 endif
 " spell thesaurus etc.
 Plug 'reedes/vim-lexical'
+" Uncover usage problems in your writing
+Plug 'reedes/vim-wordy'
 " full screen writing
 Plug 'junegunn/goyo.vim'
 " Soft wrap etc.
@@ -233,6 +235,11 @@ augroup pencil
   autocmd FileType markdown,mkd call pencil#init()
                             \ | setl spell spl=en_gb fdl=4 noru nonu nornu
                             \ | setl fdo+=search
+  						              \ | call plug#load('vim-pencil')
+                            \ | call plug#load('goyo.vim')
+                \ | call plug#load('limelight.vim')
+                \ | call plug#load('vim-wordy.vim')
+                \ | call plug#load('vim-litecorrect')
                             \ | call lexical#init()
                             \ | call litecorrect#init()
   autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
@@ -457,6 +464,7 @@ nnoremap j gj
 nnoremap k gk
 noremap gr :diffget //3<cr>
 noremap gl :diffget //2<cr>
+set diffopt+=vertical
 " " Add and delete spaces in increments of `shiftwidth' for tabs
 " " Delete trailing whitespace and tabs at the end of each line
 command! DeleteTrailingWs :%s/\s\+$//
