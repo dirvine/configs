@@ -1,6 +1,8 @@
 " Fish doesn't play all that well with others
+"
 set shell=/bin/bash
 let mapleader = "\<Space>"
+syntax enable
 
 " =============================================================================
 " # PLUGINS
@@ -8,6 +10,7 @@ let mapleader = "\<Space>"
 set nocompatible
 filetype off
 
+let g:ale_completion_enabled = 1
 " Install plug if not already installed
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -20,6 +23,14 @@ call plug#begin('~/.vim/plugged')
 if has("nvim")
   "Plug 'floobits/floobits-neovim'
 endif
+
+" Vim personal wiki
+Plug 'vimwiki/vimwiki'
+Plug 'chazy/dirsettings'
+ "vim-taskwarrior, src https://github.com/farseer90718/vim-taskwarrior
+ "taskwarrior support for vimwiki
+Plug 'farseer90718/vim-taskwarrior'
+
 " spell thesaurus etc.
 Plug 'reedes/vim-lexical'
 " Uncover usage problems in your writing
@@ -28,7 +39,6 @@ Plug 'reedes/vim-wordy'
 Plug 'junegunn/goyo.vim'
 " Soft wrap etc.
 Plug 'reedes/vim-pencil'
-" Plug 'reedes/vim-colors-pencil'
 " autocorrect
 Plug 'reedes/vim-litecorrect'
 Plug 'tpope/vim-markdown'
@@ -84,11 +94,18 @@ Plug 'oblitum/rainbow'
 Plug 'lifepillar/vim-solarized8'
 " In quickfix :Enmasse will open a buffer with each line form each file in it.
 Plug 'Olical/vim-enmasse'
-
+" Plug 'rhysd/rust-doc.vim'
+" Plug 'Shougo/denite.nvim'
 
 
 " Initialize plugin system
 call plug#end()
+" let g:rust_doc#define_map_K = 0
+" augroup vimrc-rust
+"     autocmd!
+"     autocmd FileType rust nnoremap <buffer><silent>K :<C-u>Denite rust/doc:cursor -no-empty -immediately<CR>
+"     autocmd FileType rust vnoremap <buffer><silent>K :Denite rust/doc:visual -no-empty -immediately<CR>
+" augroup END
 
 if executable('ag')
 	set grepprg=ag\ --nogroup\ --nocolor
@@ -97,6 +114,11 @@ if executable('rg')
 	set grepprg=rg\ --no-heading\ --vimgrep
 	set grepformat=%f:%l:%c:%m
 endif
+"WIKI
+let g:vimwiki_list = [{'path': '~/Devel/wiki/',
+                          \ 'syntax': 'markdown', 'ext': '.md'}]
+nmap <F10> i<C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR><Esc>
+imap <F10> <C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR>
 
 
 " Linter
@@ -108,7 +130,6 @@ let g:ale_lint_on_enter = 1
 let g:ale_rust_cargo_use_check = 1
 let g:ale_rust_cargo_check_all_targets = 1
 " ALE
-let g:ale_completion_enabled = 1
 let g:ale_linters = {}
 let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
 let g:ale_fix_on_save = 1
@@ -229,14 +250,13 @@ let g:elm_format_autosave = 1
 "autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd QuickFixCmdPost *grep* cwindow "open quickfix after a grep
 autocmd bufwritepost *.js silent !standard-format -w %
-autocmd Filetype markdown :augroup pencil "setlocal spell spelllang=en_gb
-
+autocmd Filetype markdown :augroup pencil "setlocal spell
 augroup pencil
   autocmd!
   autocmd FileType markdown,mkd call pencil#init()
                             \ | setl spell spl=en_gb fdl=4 noru nonu nornu
                             \ | setl fdo+=search
-  						              \ | call plug#load('vim-pencil')
+  						              " \ | call plug#load('vim-pencil')
                             \ | call plug#load('goyo.vim')
                 \ | call plug#load('limelight.vim')
                 \ | call plug#load('vim-wordy.vim')
@@ -246,16 +266,15 @@ augroup pencil
   autocmd Filetype git,gitsendemail,*commit*,*COMMIT*
                             \   call pencil#init({'wrap': 'hard', 'textwidth': 72})
                             \ | call litecorrect#init()
-                            \ | setl spell spl=en_us et sw=2 ts=2 noai
+                            \ | setl spell spl=en_gb et sw=2 ts=2 noai
   autocmd Filetype mail         call pencil#init({'wrap': 'hard', 'textwidth': 60})
                             \ | call litecorrect#init()
-                            \ | setl spell spl=en_us et sw=2 ts=2 noai nonu nornu
+                            \ | setl spell spl=en_gb et sw=2 ts=2 noai nonu nornu
   autocmd Filetype html,xml     call pencil#init({'wrap': 'soft'})
                             \ | call litecorrect#init()
-                            \ | setl spell spl=en_us et sw=2 ts=2
+                            \ | setl spell spl=en_gb et sw=2 ts=2
 
 augroup END
-
 autocmd! User GoyoEnter Limelight | set spell
 autocmd! User GoyoLeave Limelight!
 " " Close popup by <Space>.
@@ -513,7 +532,7 @@ map <C-l> <C-w>l
 "forgot to sudo before editing a file that requires root privileges
 cmap w!! w !sudo tee % >/dev/null
 
-syntax enable
+" syntax enable
 set termguicolors
 set bg=dark
 colorscheme solarized8
