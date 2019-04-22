@@ -58,7 +58,8 @@ Plug 'tpope/vim-surround'
 " Plug 'reedes/vim-textobj-quote'
 " Plug 'reedes/vim-textobj-sentence'
 Plug 'junegunn/limelight.vim'
-
+"Spell suggestions in window
+Plug 'dahu/vimple'
 " linter and more
 Plug 'w0rp/ale'
 " See git status in gutter
