@@ -24,9 +24,18 @@ if has("nvim")
   "Plug 'floobits/floobits-neovim'
 endif
 
+Plug 'justinmk/vim-sneak'
+
 " Vim personal wiki
 Plug 'vimwiki/vimwiki'
+" Notational FZF
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'chazy/dirsettings'
+Plug 'michal-h21/vim-zettel'
+Plug 'alok/notational-fzf-vim'
+
+" Plug 'michal-h21/vimwiki-sync'
+
  "vim-taskwarrior, src https://github.com/farseer90718/vim-taskwarrior
  "taskwarrior support for vimwiki
 Plug 'farseer90718/vim-taskwarrior'
@@ -43,6 +52,7 @@ Plug 'reedes/vim-pencil'
 Plug 'reedes/vim-litecorrect'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-surround'
 "nicer quotes when writing prose
 " Plug 'kana/vim-textobject-user'
 " Plug 'reedes/vim-textobj-quote'
@@ -106,9 +116,6 @@ call plug#end()
 "     autocmd FileType rust vnoremap <buffer><silent>K :Denite rust/doc:visual -no-empty -immediately<CR>
 " augroup END
 
-if executable('ag')
-	set grepprg=ag\ --nogroup\ --nocolor
-endif
 if executable('rg')
 	set grepprg=rg\ --no-heading\ --vimgrep
 	set grepformat=%f:%l:%c:%m
@@ -116,9 +123,33 @@ endif
 "WIKI
 let g:vimwiki_list = [{'path': '~/Devel/wiki/',
                           \ 'syntax': 'markdown', 'ext': '.md'}]
+" let wiki.nested_syntaxes = {'ruby': 'ruby', 'python': 'python', 'c++': 'cpp', 'sh': 'sh', 'racket': 'racket', 'rust': 'rust'}
+let g:vimwiki_hl_headers = 1
+let g:nv_search_paths = ['~/Devel/wiki']
+nnoremap <silent> <leader>f :NV<CR>
+" Filename format. The filename is created using strftime() function
+let g:zettel_format = "%y%m%d-%H%M"
+" Disable default keymappings
+let g:zettel_default_mappings = 0
+" This is basically the same as the default configuration
+augroup filetype_vimwiki
+  autocmd!
+  autocmd FileType vimwiki imap <silent> [[ [[<esc><Plug>ZettelSearchMap
+  autocmd FileType vimwiki nmap T <Plug>ZettelYankNameMap
+  autocmd FileType vimwiki xmap z <Plug>ZettelNewSelectedMap
+  autocmd FileType vimwiki nmap gZ <Plug>ZettelReplaceFileWithLink
+augroup END
+
+" Settings for Vimwiki
+let g:vimwiki_list = [{'path':'~/Devel/wiki/','ext':'.md','syntax':'markdown', 'zettel_template': "~/mytemplate.tpl"}, {"path":"~/Devel/wiki/"}]
+" Set template and custom header variable for the second Wiki
+let g:zettel_options = [{},{"front_matter" : {"tags" : ""}, "template" :  "~/mytemplate.tpl"}]
+
+
 nmap <F10> i<C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR><Esc>
 imap <F10> <C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR>
 
+let g:sneak#s_next = 1
 
 " Linter
 let g:ale_sign_column_always = 1
