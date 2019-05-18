@@ -33,7 +33,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'chazy/dirsettings'
 Plug 'michal-h21/vim-zettel'
 Plug 'alok/notational-fzf-vim'
-
+Plug 'itchyny/calendar.vim'
 " Plug 'michal-h21/vimwiki-sync'
 
  "vim-taskwarrior, src https://github.com/farseer90718/vim-taskwarrior
@@ -140,6 +140,23 @@ augroup filetype_vimwiki
   autocmd FileType vimwiki xmap z <Plug>ZettelNewSelectedMap
   autocmd FileType vimwiki nmap gZ <Plug>ZettelReplaceFileWithLink
 augroup END
+let g:task_log_directory   = '~/Devel/wiki'
+let g:calendar_google_calendar = 1
+" :autocmd FileType vimwiki map d :VimwikiMakeDiaryNote
+function! ToggleCalendar()
+  execute ":Calendar"
+  if exists("g:calendar_open")
+    if g:calendar_open == 1
+      execute "q"
+      unlet g:calendar_open
+    else
+      g:calendar_open = 1
+    end
+  else
+    let g:calendar_open = 1
+  end
+endfunction
+" :autocmd FileType vimwiki map c :call ToggleCalendar()
 
 " Settings for Vimwiki
 let g:vimwiki_list = [{'path':'~/Devel/wiki/','ext':'.md','syntax':'markdown', 'zettel_template': "~/mytemplate.tpl"}, {"path":"~/Devel/wiki/"}]
@@ -284,7 +301,7 @@ autocmd bufwritepost *.js silent !standard-format -w %
 autocmd Filetype markdown :augroup pencil "setlocal spell
 augroup pencil
   autocmd!
-  autocmd FileType markdown,mkd call pencil#init()
+  autocmd FileType markdown,mkd call pencil#init({'wrap': 'soft', 'textwidth': 80})
                             \ | setl spell spl=en_gb fdl=4 noru nonu nornu
                             \ | setl fdo+=search
   						              " \ | call plug#load('vim-pencil')
@@ -430,7 +447,7 @@ set wildignore=*.o,*.obj,*.bak,*.exe,*.py[co],*.swp,*~,*.pyc,.svn
 set laststatus=2        " use 2 lines for the status bar
 set matchtime=2         " show matching bracket for 0.2 seconds
 set matchpairs+=<:>     " specially for html
-set showtabline=0       " do not want to see how many files are open
+set showtabline=2       " do not want to see how many files are open
 set switchbuf=usetab       " switch to another window, possibly in another tab, if the buffer is currently displayed in another window
 
 " editor settings
