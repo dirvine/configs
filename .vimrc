@@ -10,7 +10,7 @@ syntax enable
 set nocompatible
 filetype off
 
-let g:ale_completion_enabled = 1
+let g:ale_completion_enabled = 0
 " Install plug if not already installed
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -23,6 +23,8 @@ call plug#begin('~/.vim/plugged')
 if has("nvim")
   "Plug 'floobits/floobits-neovim'
 endif
+
+Plug 'zxqfl/tabnine-vim'
 
 Plug 'justinmk/vim-sneak'
 
@@ -326,7 +328,7 @@ augroup END
 autocmd! User GoyoEnter Limelight | set spell
 autocmd! User GoyoLeave Limelight!
 " " Close popup by <Space>.
-inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+" inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
 
 " ###################  RUST  #########################
 
