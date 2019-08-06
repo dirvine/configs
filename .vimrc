@@ -39,7 +39,7 @@ Plug 'neoclide/coc-highlight', {'do': 'yarn install --frozen-lockfile'} " color 
 
 Plug 'morhetz/gruvbox'
 
-Plug 'zxqfl/tabnine-vim'
+" Plug 'zxqfl/tabnine-vim'
 
 Plug 'justinmk/vim-sneak'
 
@@ -212,7 +212,7 @@ nmap <leader>; :Buffers<CR>
 nmap <leader>w :w<CR>
 
 " comment
-map <leader>c :TComment<CR>
+map <leader><leader>c :TComment<CR>
 " =============================================================================
 " # Keyboard shortcuts
 " =============================================================================
@@ -466,6 +466,12 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+" USe cursors
+nmap <silent> <C-c> <Plug>(coc-cursors-position)
+nmap <silent> <C-d> <Plug>(coc-cursors-word)
+xmap <silent> <C-d> <Plug>(coc-cursors-range)
+" use normal command like `<leader>xi(`
+nmap <leader>x  <Plug>(coc-cursors-operator)
 
 " ###################  RUST  #########################
 
