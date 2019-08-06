@@ -1,7 +1,7 @@
 " Fish doesn't play all that well with others
 "
 set shell=/bin/bash
-let mapleader = "\<Space>"
+"let mapleader = "\<Space>"
 syntax enable
 
 " =============================================================================
@@ -23,6 +23,21 @@ call plug#begin('~/.vim/plugged')
 if has("nvim")
   "Plug 'floobits/floobits-neovim'
 endif
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-prettier', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-eslint', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-tslint', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-tabnine', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-lists', {'do': 'yarn install --frozen-lockfile'} " mru and stuff
+Plug 'neoclide/coc-highlight', {'do': 'yarn install --frozen-lockfile'} " color highlighting
+
+Plug 'morhetz/gruvbox'
 
 Plug 'zxqfl/tabnine-vim'
 
@@ -67,10 +82,10 @@ Plug 'w0rp/ale'
 " See git status in gutter
 Plug 'mhinz/vim-signify'
 " for rls etc.
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+" Plug 'autozimu/LanguageClient-neovim', {
+"     \ 'branch': 'next',
+"     \ 'do': 'bash install.sh',
+"     \ }
 " Search for a project root (.git etc) and make that home.
 Plug 'airblade/vim-rooter'
 "Displays function signatures from completions in the command line.
@@ -103,7 +118,7 @@ Plug 'xolox/vim-session'
 Plug 'tomtom/tcomment_vim'
 Plug 'oblitum/rainbow'
 " Plug 'ap/vim-buftabline'
-Plug 'lifepillar/vim-solarized8'
+" Plug 'lifepillar/vim-solarized8'
 " In quickfix :Enmasse will open a buffer with each line form each file in it.
 Plug 'Olical/vim-enmasse'
 " Plug 'rhysd/rust-doc.vim'
@@ -172,22 +187,22 @@ imap <F10> <C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR>
 let g:sneak#s_next = 1
 
 " Linter
-let g:ale_sign_column_always = 1
-" only lint on save
-let g:ale_lint_on_text_changed = 1
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_enter = 1
-let g:ale_rust_cargo_use_check = 1
-let g:ale_rust_cargo_check_all_targets = 1
-" ALE
-let g:ale_linters = {}
-let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
-let g:ale_fix_on_save = 1
-let g:ale_rust_rls_executable = 'rls'
-let g:ale_rust_rls_toolchain = 'stable'
-let g:ale_linters['rust'] = ['rls']
-let g:ale_fixers['rust'] = ['rustfmt']
-let g:ale_set_ballons = 1
+" let g:ale_sign_column_always = 1
+" " only lint on save
+" let g:ale_lint_on_text_changed = 1
+" let g:ale_lint_on_save = 1
+" let g:ale_lint_on_enter = 1
+" let g:ale_rust_cargo_use_check = 1
+" let g:ale_rust_cargo_check_all_targets = 1
+" " ALE
+" let g:ale_linters = {}
+" let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
+" let g:ale_fix_on_save = 1
+" let g:ale_rust_rls_executable = 'rls'
+" let g:ale_rust_rls_toolchain = 'stable'
+" let g:ale_linters['rust'] = ['rls']
+" let g:ale_fixers['rust'] = ['rustfmt']
+" let g:ale_set_ballons = 1
 
 " Open hotkeys
 map <C-p> :Files<CR>
@@ -231,16 +246,16 @@ inoremap <right> <nop>
 nnoremap <left> :bp<CR>
 nnoremap <right> :bn<CR>
 
-" language server protocol
-let g:LanguageClient_settingsPath = "/home/dirvine/.vim/settings.json"
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['env', 'CARGO_TARGET_DIR=/home/dirvine/cargo-target/rls', 'rls'],
-    \ }
-let g:LanguageClient_autoStart = 1
-nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> <F7> :call LanguageClient_textDocument_rename()<CR>
-
+" " language server protocol
+" let g:LanguageClient_settingsPath = "/home/dirvine/.vim/settings.json"
+" let g:LanguageClient_serverCommands = {
+"     \ 'rust': ['env', 'CARGO_TARGET_DIR=/home/dirvine/cargo-target/rls', 'rls'],
+"     \ }
+" let g:LanguageClient_autoStart = 1
+" nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+" nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+" nnoremap <silent> <F7> :call LanguageClient_textDocument_rename()<CR>
+"
 let g:rustfmt_command = "rustfmt"
 let g:rustfmt_autosave = 1
 let g:rustfmt_emit_files = 1
@@ -256,15 +271,15 @@ set complete+=kspell
 "inoremap <expr><Tab> (pumvisible()?(empty(v:completed_item)?"\<C-n>":"\<C-y>"):"\<Tab>")
 "inoremap <expr><CR> (pumvisible()?(empty(v:completed_item)?"\<CR>\<CR>":"\<C-y>"):"\<CR>")
 
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
-    \ 'python': ['/usr/local/bin/pyls'],
-    \ }
-
-nnoremap <F9> :call LanguageClient_contextMenu()<CR>
-
+" let g:LanguageClient_serverCommands = {
+"     \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+"     \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+"     \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+"     \ 'python': ['/usr/local/bin/pyls'],
+"     \ }
+"
+" nnoremap <F9> :call LanguageClient_contextMenu()<CR>
+"
 filetype plugin indent on
 set hidden
 nnoremap <C-N> :bnext<CR>
@@ -329,6 +344,128 @@ autocmd! User GoyoEnter Limelight | set spell
 autocmd! User GoyoLeave Limelight!
 " " Close popup by <Space>.
 " inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+" ################### COC ###############################
+" Some servers have issues with backup files, see #649
+set nobackup
+set nowritebackup
+
+" Better display for messages
+set cmdheight=2
+
+" You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
+
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
+
+" always show signcolumns
+set signcolumn=yes
+
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use `[c` and `]c` to navigate diagnostics
+nmap <silent> [c <Plug>(coc-diagnostic-prev)
+nmap <silent> ]c <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+" rename the current word in the cursor
+nmap <leader>cr  <Plug>(coc-rename)
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" Remap for format selected region
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap for do codeAction of current line
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Fix autofix problem of current line
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Use <tab> for select selections ranges, needs server support, like: coc-tsserver, coc-python
+nmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <S-TAB> <Plug>(coc-range-select-backword)
+
+" Use `:Format` to format current buffer
+command! -nargs=0 Format :call CocAction('format')
+
+" Use `:Fold` to fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" use `:OR` for organize import of current buffer
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add status line support, for integration with other plugin, checkout `:h coc-status`
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 " ###################  RUST  #########################
 
@@ -352,24 +489,25 @@ let g:rustc_makeprg_no_percent = 1
 
 " ################ Python ################
 
-nnoremap <silent> <leader>zj :call NextClosedFold('j')<cr>
-nnoremap <silent> <leader>zk :call NextClosedFold('k')<cr>
-function! NextClosedFold(dir)
-    let cmd = 'norm!z' . a:dir
-    let view = winsaveview()
-    let [l0, l, open] = [0, view.lnum, 1]
-    while l != l0 && open
-        exe cmd
-        let [l0, l] = [l, line('.')]
-        let open = foldclosed(l) < 0
-    endwhile
-    if open
-        call winrestview(view)
-    endif
-endfunction
+" nnoremap <silent> <leader>zj :call NextClosedFold('j')<cr>
+" nnoremap <silent> <leader>zk :call NextClosedFold('k')<cr>
+" function! NextClosedFold(dir)
+"     let cmd = 'norm!z' . a:dir
+"     let view = winsaveview()
+"     let [l0, l, open] = [0, view.lnum, 1]
+"     while l != l0 && open
+"         exe cmd
+"         let [l0, l] = [l, line('.')]
+"         let open = foldclosed(l) < 0
+"     endwhile
+"     if open
+"         call winrestview(view)
+"     endif
+" endfunction
 " remove all whitespace on every write
 autocmd BufWritePre * :%s/\s\+$//e
-let g:airline_theme='solarized'
+let g:airline_theme='gruvbox'
+let g:airline#extensions#coc#enabled = 1
 let g:airline_left_sep=''
 let g:airline_right_sep=''
 let g:airline_detect_paste=1
@@ -392,7 +530,7 @@ let g:ctrlp_switch_buffer = 0
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/build*/,*/target
 nnoremap <silent> <Leader>p :CtrlP <CR>
 nmap ; :CtrlPBuffer<CR>
-nmap <leader>a :CtrlPTag<CR>
+"nmap <leader>a :CtrlPTag<CR>
 nnoremap <silent> <Leader>n :set nonumber!<CR>
 
 
@@ -532,8 +670,8 @@ nmap <F6> :ALEHover <cr>
 "nmap <F7> :setlocal spell! spelllang=en_gb<CR>
 nnoremap j gj
 nnoremap k gk
-noremap gr :diffget //3<cr>
-noremap gl :diffget //2<cr>
+noremap dr :diffget //3<cr>
+noremap dl :diffget //2<cr>
 set diffopt+=vertical
 " " Add and delete spaces in increments of `shiftwidth' for tabs
 " " Delete trailing whitespace and tabs at the end of each line
@@ -585,4 +723,4 @@ cmap w!! w !sudo tee % >/dev/null
 " syntax enable
 set termguicolors
 set bg=dark
-colorscheme solarized8
+colorscheme gruvbox
