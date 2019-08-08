@@ -199,8 +199,8 @@ bindsym Control+$mod+l exec i3lock-fancy
 bar {
         status_command i3status
         position bottom
-        mode hide
-        hidden_state hide
+        # mode hide
+        # hidden_state hide
         modifier Mod4
 }
 
