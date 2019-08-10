@@ -144,7 +144,7 @@ let g:vimwiki_list = [{'path': '~/Devel/wiki/',
 " let wiki.nested_syntaxes = {'ruby': 'ruby', 'python': 'python', 'c++': 'cpp', 'sh': 'sh', 'racket': 'racket', 'rust': 'rust'}
 let g:vimwiki_hl_headers = 1
 let g:nv_search_paths = ['~/Devel/wiki']
-nnoremap <silent> <leader>f :NV<CR>
+nnoremap <silent> <leader><leader>f :NV<CR>
 " Filename format. The filename is created using strftime() function
 let g:zettel_format = "%y%m%d-%H%M"
 " Disable default keymappings
@@ -394,9 +394,6 @@ nmap <silent> gr <Plug>(coc-references)
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-" rename the current word in the cursor
-nmap <leader>cr  <Plug>(coc-rename)
-
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
@@ -409,7 +406,7 @@ endfunction
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
+nmap <leader>cw <Plug>(coc-rename)
 
 " Remap for format selected region
 xmap <leader>f  <Plug>(coc-format-selected)
@@ -668,11 +665,10 @@ nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 
 "######################### Function Key Mappings ####################
 nmap <F1> :ALEFix <cr>
-nmap <F2> :cnext <cr>
-nmap <F3> :cprev <cr>
+nmap <F2> :cprev <cr>
+nmap <F3> :cnext <cr>
 map <F4> :cclose <cr> :lclose <cr>
 nmap <F5> :NERDTreeToggle  <CR>
-nmap <F6> :ALEHover <cr>
 "nmap <F7> :setlocal spell! spelllang=en_gb<CR>
 nnoremap j gj
 nnoremap k gk
