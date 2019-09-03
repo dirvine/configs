@@ -143,7 +143,7 @@ let g:vimwiki_list = [{'path': '~/Devel/wiki/',
                           \ 'syntax': 'markdown', 'ext': '.md'}]
 " let wiki.nested_syntaxes = {'ruby': 'ruby', 'python': 'python', 'c++': 'cpp', 'sh': 'sh', 'racket': 'racket', 'rust': 'rust'}
 let g:vimwiki_hl_headers = 1
-let g:nv_search_paths = ['~/Devel/wiki']
+let g:nv_search_paths = ['src/']
 nnoremap <silent> <leader><leader>f :NV<CR>
 " Filename format. The filename is created using strftime() function
 let g:zettel_format = "%y%m%d-%H%M"
