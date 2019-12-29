@@ -32,12 +32,14 @@ Plug 'neoclide/coc-prettier', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-eslint', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-tslint', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-tabnine', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-lists', {'do': 'yarn install --frozen-lockfile'} " mru and stuff
 Plug 'neoclide/coc-highlight', {'do': 'yarn install --frozen-lockfile'} " color highlighting
 
 Plug 'morhetz/gruvbox'
+
+Plug 'takac/vim-hardtime'
 
 " Plug 'zxqfl/tabnine-vim'
 
@@ -70,6 +72,9 @@ Plug 'reedes/vim-litecorrect'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-sensible'
 "nicer quotes when writing prose
 " Plug 'kana/vim-textobject-user'
 " Plug 'reedes/vim-textobj-quote'
@@ -78,7 +83,7 @@ Plug 'junegunn/limelight.vim'
 "Spell suggestions in window
 Plug 'dahu/vimple'
 " linter and more
-Plug 'w0rp/ale'
+" Plug 'w0rp/ale'
 " See git status in gutter
 Plug 'mhinz/vim-signify'
 " for rls etc.
@@ -115,7 +120,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-session'
 " Code commenter (leader c
-Plug 'tomtom/tcomment_vim'
+" Plug 'tomtom/tcomment_vim'
 Plug 'oblitum/rainbow'
 " Plug 'ap/vim-buftabline'
 " Plug 'lifepillar/vim-solarized8'
@@ -133,7 +138,7 @@ call plug#end()
 "     autocmd FileType rust nnoremap <buffer><silent>K :<C-u>Denite rust/doc:cursor -no-empty -immediately<CR>
 "     autocmd FileType rust vnoremap <buffer><silent>K :Denite rust/doc:visual -no-empty -immediately<CR>
 " augroup END
-
+let g:hardtime_default_on = 1
 if executable('rg')
 	set grepprg=rg\ --no-heading\ --vimgrep
 	set grepformat=%f:%l:%c:%m
@@ -185,24 +190,7 @@ nmap <F10> i<C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR><Esc>
 imap <F10> <C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR>
 
 let g:sneak#s_next = 1
-
-" Linter
-" let g:ale_sign_column_always = 1
-" " only lint on save
-" let g:ale_lint_on_text_changed = 1
-" let g:ale_lint_on_save = 1
-" let g:ale_lint_on_enter = 1
-" let g:ale_rust_cargo_use_check = 1
-" let g:ale_rust_cargo_check_all_targets = 1
-" " ALE
-" let g:ale_linters = {}
-" let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
-" let g:ale_fix_on_save = 1
-" let g:ale_rust_rls_executable = 'rls'
-" let g:ale_rust_rls_toolchain = 'stable'
-" let g:ale_linters['rust'] = ['rls']
-" let g:ale_fixers['rust'] = ['rustfmt']
-" let g:ale_set_ballons = 1
+" let g:sneak#label = 1
 
 " Open hotkeys
 map <C-p> :Files<CR>
@@ -211,13 +199,9 @@ nmap <leader>; :Buffers<CR>
 " Quick-save
 nmap <leader>w :w<CR>
 
-" comment
-map <leader><leader>c :TComment<CR>
 " =============================================================================
 " # Keyboard shortcuts
 " =============================================================================
-" ; as :
-nnoremap ; :
 
 " Ctrl+c and Ctrl+j as Esc
 inoremap <C-j> <Esc>
@@ -225,10 +209,6 @@ vnoremap <C-j> <Esc>
 inoremap <C-c> <Esc>
 vnoremap <C-c> <Esc>
 
-" Suspend with Ctrl+f
-inoremap <C-f> :sus<cr>
-vnoremap <C-f> :sus<cr>
-nnoremap <C-f> :sus<cr>
 
 " Jump to start and end of line using the home row keys
 map H ^
@@ -246,16 +226,6 @@ inoremap <right> <nop>
 nnoremap <left> :bp<CR>
 nnoremap <right> :bn<CR>
 
-" " language server protocol
-" let g:LanguageClient_settingsPath = "/home/dirvine/.vim/settings.json"
-" let g:LanguageClient_serverCommands = {
-"     \ 'rust': ['env', 'CARGO_TARGET_DIR=/home/dirvine/cargo-target/rls', 'rls'],
-"     \ }
-" let g:LanguageClient_autoStart = 1
-" nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
-" nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-" nnoremap <silent> <F7> :call LanguageClient_textDocument_rename()<CR>
-"
 let g:rustfmt_command = "rustfmt"
 let g:rustfmt_autosave = 1
 let g:rustfmt_emit_files = 1
@@ -264,23 +234,8 @@ let g:rust_clip_command = 'xclip -selection clipboard'
 let $RUST_SRC_PATH = systemlist("rustc --print sysroot")[0] . "/lib/rustlib/src/rust/src"
 
 " Completion
-set completeopt=noinsert,menuone,noselect
+" set completeopt=noinsert,menuone,noselect
 set complete+=kspell
-" tab to select
-" and don't hijack my enter key
-"inoremap <expr><Tab> (pumvisible()?(empty(v:completed_item)?"\<C-n>":"\<C-y>"):"\<Tab>")
-"inoremap <expr><CR> (pumvisible()?(empty(v:completed_item)?"\<CR>\<CR>":"\<C-y>"):"\<CR>")
-
-" let g:LanguageClient_serverCommands = {
-"     \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-"     \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-"     \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
-"     \ 'python': ['/usr/local/bin/pyls'],
-"     \ }
-"
-" nnoremap <F9> :call LanguageClient_contextMenu()<CR>
-"
-filetype plugin indent on
 set hidden
 nnoremap <C-N> :bnext<CR>
 nnoremap <C-P> :bprev<CR>
@@ -311,7 +266,7 @@ au BufRead,BufNewFile *.md set filetype=markdown
 au BufRead,BufNewFile *.elm set filetype=elm
 let g:elm_format_autosave = 1
 " autocmd BufRead,BufNewFile Cargo.toml,Cargo.lock,*.rs compiler cargo | set makeprg=cargo | set errorformat=%Eerror%m,%Z\ %#-->\ %f:%l:%c
-" autocmd BufWritePost *.rs | :RustFmt
+autocmd BufWritePost *.rs | :RustFmt
 "autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd QuickFixCmdPost *grep* cwindow "open quickfix after a grep
 autocmd bufwritepost *.js silent !standard-format -w %
@@ -352,6 +307,7 @@ set nowritebackup
 " Better display for messages
 set cmdheight=2
 
+set path+=**
 " You will have bad experience for diagnostic messages when it's default 4000.
 set updatetime=300
 
@@ -465,8 +421,8 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " USe cursors
 nmap <silent> <C-c> <Plug>(coc-cursors-position)
-nmap <silent> <C-d> <Plug>(coc-cursors-word)
-xmap <silent> <C-d> <Plug>(coc-cursors-range)
+" nmap <silent> <C-d> <Plug>(coc-cursors-word)
+" xmap <silent> <C-d> <Plug>(coc-cursors-range)
 " use normal command like `<leader>xi(`
 nmap <leader>x  <Plug>(coc-cursors-operator)
 
@@ -478,7 +434,7 @@ nnoremap <silent> <Leader>b :make build  <CR> <bar> :copen <CR>
 nnoremap <silent> <Leader>r :make run  <CR> <bar> :copen <CR>
 nnoremap <silent> <Leader>l :make test --no-run clippy <CR> <bar> :copen <CR>
 nnoremap <silent> <Leader>t :make test -- --nocapture <CR>
-let g:rustfmt_autosave = 0
+let g:rustfmt_autosave = 1
 let g:rustfmt_fail_silently = 1
 let g:rust_fold = 1
 let g:rust_bang_comment_leader = 1
@@ -490,24 +446,7 @@ let g:rust_shortener_url = 'https://is.gd/'
 let g:rust_conceal = 1
 let g:rustc_makeprg_no_percent = 1
 
-" ################ Python ################
 
-" nnoremap <silent> <leader>zj :call NextClosedFold('j')<cr>
-" nnoremap <silent> <leader>zk :call NextClosedFold('k')<cr>
-" function! NextClosedFold(dir)
-"     let cmd = 'norm!z' . a:dir
-"     let view = winsaveview()
-"     let [l0, l, open] = [0, view.lnum, 1]
-"     while l != l0 && open
-"         exe cmd
-"         let [l0, l] = [l, line('.')]
-"         let open = foldclosed(l) < 0
-"     endwhile
-"     if open
-"         call winrestview(view)
-"     endif
-" endfunction
-" remove all whitespace on every write
 autocmd BufWritePre * :%s/\s\+$//e
 let g:airline_theme='gruvbox'
 let g:airline#extensions#coc#enabled = 1
@@ -532,7 +471,7 @@ let g:ctrlp_clear_cache_on_exit = 1
 let g:ctrlp_switch_buffer = 0
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/build*/,*/target
 nnoremap <silent> <Leader>p :CtrlP <CR>
-nmap ; :CtrlPBuffer<CR>
+" nmap ; :CtrlPBuffer<CR>
 "nmap <leader>a :CtrlPTag<CR>
 nnoremap <silent> <Leader>n :set nonumber!<CR>
 
@@ -665,8 +604,8 @@ nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 
 "######################### Function Key Mappings ####################
 nmap <F1> :ALEFix <cr>
-nmap <F2> :cprev <cr>
-nmap <F3> :cnext <cr>
+nmap <F2> :coc-diagnostic-prev <cr>
+nmap <F3> :coc-diagnostic-next <cr>
 map <F4> :cclose <cr> :lclose <cr>
 nmap <F5> :NERDTreeToggle  <CR>
 "nmap <F7> :setlocal spell! spelllang=en_gb<CR>
