@@ -32,7 +32,6 @@ Plug 'neoclide/coc-prettier', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-eslint', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-tslint', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-tabnine', {'do': 'yarn install --frozen-lockfile'}
-" Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-lists', {'do': 'yarn install --frozen-lockfile'} " mru and stuff
 Plug 'neoclide/coc-highlight', {'do': 'yarn install --frozen-lockfile'} " color highlighting
@@ -44,6 +43,7 @@ Plug 'takac/vim-hardtime'
 " Plug 'zxqfl/tabnine-vim'
 
 Plug 'justinmk/vim-sneak'
+Plug 'wincent/terminus'
 
 " Vim personal wiki
 Plug 'vimwiki/vimwiki'
@@ -68,6 +68,8 @@ Plug 'junegunn/goyo.vim'
 " Soft wrap etc.
 Plug 'reedes/vim-pencil'
 " autocorrect
+Plug 'airblade/vim-gitgutter'
+
 Plug 'reedes/vim-litecorrect'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-abolish'
@@ -82,15 +84,7 @@ Plug 'tpope/vim-sensible'
 Plug 'junegunn/limelight.vim'
 "Spell suggestions in window
 Plug 'dahu/vimple'
-" linter and more
-" Plug 'w0rp/ale'
-" See git status in gutter
-Plug 'mhinz/vim-signify'
-" for rls etc.
-" Plug 'autozimu/LanguageClient-neovim', {
-"     \ 'branch': 'next',
-"     \ 'do': 'bash install.sh',
-"     \ }
+" Plug 'mhinz/vim-signify'
 " Search for a project root (.git etc) and make that home.
 Plug 'airblade/vim-rooter'
 "Displays function signatures from completions in the command line.
@@ -132,24 +126,96 @@ Plug 'Olical/vim-enmasse'
 
 " Initialize plugin system
 call plug#end()
-" let g:rust_doc#define_map_K = 0
-" augroup vimrc-rust
-"     autocmd!
-"     autocmd FileType rust nnoremap <buffer><silent>K :<C-u>Denite rust/doc:cursor -no-empty -immediately<CR>
-"     autocmd FileType rust vnoremap <buffer><silent>K :Denite rust/doc:visual -no-empty -immediately<CR>
-" augroup END
+
+" =============================================================================
+" # Mappings
+" =============================================================================
+nnoremap <silent> <leader><leader>f :NV<CR>
+noremap <c-Down> <c-e>
+noremap <c-Up> <c-y>
+noremap <S-Down> <c-d>
+noremap <S-Up> <c-u>
+" Leftt and right switch buffers
+nnoremap <c-left> :bp<CR>
+nnoremap <c-right> :bn<CR>
+map <C-p> :Files<CR>
+nmap <leader>; :Buffers<CR>
+" Jump to start and end of line using the home row keys
+map H ^
+map L $
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use `[c` and `]c` to navigate diagnostics
+" nmap <silent> [c <Plug>(coc-diagnostic-prev)
+" nmap <silent> ]c <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+" Remap for rename current word
+nmap <leader>cw <Plug>(coc-rename)
+
+" Remap for format selected region
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap for do codeAction of current line
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Fix autofix problem of current line
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Use <tab> for select selections ranges, needs server support, like: coc-tsserver, coc-python
+nmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <S-TAB> <Plug>(coc-range-select-backword)
+
 let g:hardtime_default_on = 1
+let g:hardtime_ignore_buffer_patterns = [ "CustomPatt[ae]rn", "NERD.*" ]
+let g:hardtime_ignore_quickfix = 1
+
 if executable('rg')
 	set grepprg=rg\ --no-heading\ --vimgrep
 	set grepformat=%f:%l:%c:%m
 endif
 "WIKI
-let g:vimwiki_list = [{'path': '~/Devel/wiki/',
-                          \ 'syntax': 'markdown', 'ext': '.md'}]
 " let wiki.nested_syntaxes = {'ruby': 'ruby', 'python': 'python', 'c++': 'cpp', 'sh': 'sh', 'racket': 'racket', 'rust': 'rust'}
 let g:vimwiki_hl_headers = 1
 let g:nv_search_paths = ['src/', '~/Devel/wiki']
-nnoremap <silent> <leader><leader>f :NV<CR>
+
 " Filename format. The filename is created using strftime() function
 let g:zettel_format = "%y%m%d-%H%M"
 " Disable default keymappings
@@ -179,52 +245,26 @@ function! ToggleCalendar()
   end
 endfunction
 " :autocmd FileType vimwiki map c :call ToggleCalendar()
-
 " Settings for Vimwiki
 let g:vimwiki_list = [{'path':'~/Devel/wiki/','ext':'.md','syntax':'markdown', 'zettel_template': "~/mytemplate.tpl"}, {"path":"~/Devel/wiki/"}]
 " Set template and custom header variable for the second Wiki
 let g:zettel_options = [{},{"front_matter" : {"tags" : ""}, "template" :  "~/mytemplate.tpl"}]
 
 
-nmap <F10> i<C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR><Esc>
-imap <F10> <C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR>
-
 let g:sneak#s_next = 1
 " let g:sneak#label = 1
-
 " Open hotkeys
-map <C-p> :Files<CR>
-nmap <leader>; :Buffers<CR>
 
-" Quick-save
-nmap <leader>w :w<CR>
 
 " =============================================================================
 " # Keyboard shortcuts
 " =============================================================================
 
-" Ctrl+c and Ctrl+j as Esc
-inoremap <C-j> <Esc>
-vnoremap <C-j> <Esc>
-inoremap <C-c> <Esc>
-vnoremap <C-c> <Esc>
 
 
-" Jump to start and end of line using the home row keys
-map H ^
-map L $
 
-" No arrow keys --- force yourself to use the home row
-nnoremap <up> <nop>
-nnoremap <down> <nop>
-inoremap <up> <nop>
-inoremap <down> <nop>
-inoremap <left> <nop>
-inoremap <right> <nop>
 
 " Left and right can switch buffers
-nnoremap <left> :bp<CR>
-nnoremap <right> :bn<CR>
 
 let g:rustfmt_command = "rustfmt"
 let g:rustfmt_autosave = 1
@@ -237,21 +277,6 @@ let $RUST_SRC_PATH = systemlist("rustc --print sysroot")[0] . "/lib/rustlib/src/
 " set completeopt=noinsert,menuone,noselect
 set complete+=kspell
 set hidden
-nnoremap <C-N> :bnext<CR>
-nnoremap <C-P> :bprev<CR>
-        nmap <leader>1 <Plug>BufTabLine.Go(1)
-        nmap <leader>2 <Plug>BufTabLine.Go(2)
-        nmap <leader>3 <Plug>BufTabLine.Go(3)
-        nmap <leader>4 <Plug>BufTabLine.Go(4)
-        nmap <leader>5 <Plug>BufTabLine.Go(5)
-        nmap <leader>6 <Plug>BufTabLine.Go(6)
-        nmap <leader>7 <Plug>BufTabLine.Go(7)
-        nmap <leader>8 <Plug>BufTabLine.Go(8)
-        nmap <leader>9 <Plug>BufTabLine.Go(9)
-        nmap <leader>0 <Plug>BufTabLine.Go(10)
-        nmap <leader>11 <Plug>BufTabLine.Go(10)
-        nmap <leader>12 <Plug>BufTabLine.Go(10)
-
         let g:rainbow_levels = [
     \{'ctermfg': 2, 'guifg': '#859900'},
     \{'ctermfg': 6, 'guifg': '#2aa198'},
@@ -297,8 +322,7 @@ augroup pencil
 augroup END
 autocmd! User GoyoEnter Limelight | set spell
 autocmd! User GoyoLeave Limelight!
-" " Close popup by <Space>.
-" inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+" #######################################################
 " ################### COC ###############################
 " Some servers have issues with backup files, see #649
 set nobackup
@@ -317,56 +341,10 @@ set shortmess+=c
 " always show signcolumns
 set signcolumn=yes
 
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-" Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-
-" Use `[c` and `]c` to navigate diagnostics
-nmap <silent> [c <Plug>(coc-diagnostic-prev)
-nmap <silent> ]c <Plug>(coc-diagnostic-next)
-
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
 
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" Remap for rename current word
-nmap <leader>cw <Plug>(coc-rename)
-
-" Remap for format selected region
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
@@ -376,19 +354,6 @@ augroup mygroup
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
-" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Use <tab> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-nmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <S-TAB> <Plug>(coc-range-select-backword)
 
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
@@ -603,7 +568,7 @@ nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
 nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 
 "######################### Function Key Mappings ####################
-nmap <F1> :ALEFix <cr>
+" nmap <F1> :ALEFix <cr>
 nmap <F2> :coc-diagnostic-prev <cr>
 nmap <F3> :coc-diagnostic-next <cr>
 map <F4> :cclose <cr> :lclose <cr>
@@ -626,28 +591,9 @@ command! Untab :%s/\t/  /g
 "  map <C-t><left> :tabp<cr>
 "  map <C-t><right> :tabn<cr>
 "################### Miscellaneous ##########################################
-if &term =~ "xterm\\|rxvt"
-  " use an orange cursor in insert mode
-  let &t_SI = "\<Esc>]12;yellow\x7"
-  " use a red cursor otherwise
-  let &t_EI = "\<Esc>]12;red\x7"
-  " silent !echo -ne "\033]12;red\007"
-   " reset cursor when vim exits
-  autocmd VimLeave * silent !echo -ne "\033]112\007"
-endif
 
 au BufWritePost *.* mksession! ~/session.vim
 noremap <C-s> :source ~/session.vim
-
-"#### EASY NAVIGATION IN INSERT MODE  ################################
-noremap <A-j> <Left>
-noremap <A-k> <Down>
-noremap <A-l> <Up>
-noremap <A-m> <Right>
-inoremap <A-j> <Left>
-inoremap <A-k> <Down>
-inoremap <A-l> <Up>
-inoremap <A-m> <Right>
 
 "################### save on lost focus ###########################
 au FocusLost * :wa
