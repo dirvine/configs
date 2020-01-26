@@ -1,4 +1,4 @@
-" Fish doesn't play all that well with others
+
 "
 set shell=/bin/bash
 "let mapleader = "\<Space>"
@@ -23,18 +23,11 @@ call plug#begin('~/.vim/plugged')
 if has("nvim")
   "Plug 'floobits/floobits-neovim'
 endif
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc-denite'
+Plug 'chemzqm/denite-git'
+Plug 'chemzqm/todoapp.vim'
 
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
-Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-prettier', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-eslint', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-tslint', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-tabnine', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-lists', {'do': 'yarn install --frozen-lockfile'} " mru and stuff
-Plug 'neoclide/coc-highlight', {'do': 'yarn install --frozen-lockfile'} " color highlighting
 
 Plug 'morhetz/gruvbox'
 
@@ -94,6 +87,7 @@ Plug 'dag/vim-fish'
 " File explorere
 Plug 'scrooloose/nerdtree'
 " Git helper
+Plug 'jreybert/vimagit'
 Plug 'tpope/vim-fugitive'
 "A git commit browser for vim. Extends fugitive.vim
 " :Extradite
@@ -199,9 +193,9 @@ nmap <leader>ac  <Plug>(coc-codeaction)
 nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Use <tab> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-nmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <S-TAB> <Plug>(coc-range-select-backword)
+" nmap <silent> <TAB> <Plug>(coc-range-select)
+" xmap <silent> <TAB> <Plug>(coc-range-select)
+" xmap <silent> <S-TAB> <Plug>(coc-range-select-backword)
 
 let g:hardtime_default_on = 1
 let g:hardtime_ignore_buffer_patterns = [ "CustomPatt[ae]rn", "NERD.*" ]
@@ -254,7 +248,16 @@ let g:zettel_options = [{},{"front_matter" : {"tags" : ""}, "template" :  "~/myt
 let g:sneak#s_next = 1
 " let g:sneak#label = 1
 " Open hotkeys
+" press <esc> to cancel.
+nmap f <Plug>(coc-smartf-forward)
+nmap F <Plug>(coc-smartf-backward)
+nmap ; <Plug>(coc-smartf-repeat)
+nmap , <Plug>(coc-smartf-repeat-opposite)
 
+augroup Smartf
+  autocmd User SmartfEnter :hi Conceal ctermfg=220 guifg=#6638F0
+  autocmd User SmartfLeave :hi Conceal ctermfg=239 guifg=#504945
+augroup end
 
 " =============================================================================
 " # Keyboard shortcuts
@@ -277,15 +280,15 @@ let $RUST_SRC_PATH = systemlist("rustc --print sysroot")[0] . "/lib/rustlib/src/
 " set completeopt=noinsert,menuone,noselect
 set complete+=kspell
 set hidden
-        let g:rainbow_levels = [
-    \{'ctermfg': 2, 'guifg': '#859900'},
-    \{'ctermfg': 6, 'guifg': '#2aa198'},
-    \{'ctermfg': 4, 'guifg': '#268bd2'},
-    \{'ctermfg': 5, 'guifg': '#6c71c4'},
-    \{'ctermfg': 1, 'guifg': '#dc322f'},
-    \{'ctermfg': 3, 'guifg': '#b58900'},
-    \{'ctermfg': 8, 'guifg': '#839496'},
-    \{'ctermfg': 7, 'guifg': '#586e75'}]
+        " let g:rainbow_levels = [
+    " \{'ctermfg': 2, 'guifg': '#859900'},
+    " \{'ctermfg': 6, 'guifg': '#2aa198'},
+    " \{'ctermfg': 4, 'guifg': '#268bd2'},
+    " \{'ctermfg': 5, 'guifg': '#6c71c4'},
+    " \{'ctermfg': 1, 'guifg': '#dc322f'},
+    " \{'ctermfg': 3, 'guifg': '#b58900'},
+    " \{'ctermfg': 8, 'guifg': '#839496'},
+    " \{'ctermfg': 7, 'guifg': '#586e75'}]
 au BufNewFile,BufRead *.rs set filetype=rust
 au BufRead,BufNewFile *.md set filetype=markdown
 au BufRead,BufNewFile *.elm set filetype=elm
@@ -333,7 +336,7 @@ set cmdheight=2
 
 set path+=**
 " You will have bad experience for diagnostic messages when it's default 4000.
-set updatetime=300
+set updatetime=900
 
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
@@ -397,7 +400,8 @@ let RUST_SRC_PATH=$RUST_SRC_PATH
 let g:ycm_rust_src_path = $RUST_SRC_PATH
 nnoremap <silent> <Leader>b :make build  <CR> <bar> :copen <CR>
 nnoremap <silent> <Leader>r :make run  <CR> <bar> :copen <CR>
-nnoremap <silent> <Leader>l :make test --no-run clippy <CR> <bar> :copen <CR>
+nnoremap <silent> <Leader>l :make clippy --all  <CR> <bar> :copen <CR>
+nnoremap <silent> <Leader><leader> :make clippy --all -- -W clippy::all -W clippy::pedantic  -W clippy::nursery -D warnings <CR> <bar> :copen <CR>
 nnoremap <silent> <Leader>t :make test -- --nocapture <CR>
 let g:rustfmt_autosave = 1
 let g:rustfmt_fail_silently = 1
@@ -564,13 +568,12 @@ function! ToggleList(bufname, pfx)
   endif
 endfunction
 
-nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
-nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
+" nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
+" nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 
 "######################### Function Key Mappings ####################
-" nmap <F1> :ALEFix <cr>
-nmap <F2> :coc-diagnostic-prev <cr>
-nmap <F3> :coc-diagnostic-next <cr>
+nmap <F2> :cp <cr>
+nmap <F3> :cn <cr>
 map <F4> :cclose <cr> :lclose <cr>
 nmap <F5> :NERDTreeToggle  <CR>
 "nmap <F7> :setlocal spell! spelllang=en_gb<CR>

@@ -118,3 +118,5 @@ export PATH="/home/dirvine/miniconda3/bin:$PATH"
 alias config='/usr/bin/git --git-dir=/home/dirvine/.cfg/ --work-tree=/home/dirvine'
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+source /home/dirvine/.config/broot/launcher/bash/br
