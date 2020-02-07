@@ -18,7 +18,7 @@ Abolish -buffer ab about
 Abolish -buffer co could
 Abolish -buffer sho should
 Abolish -buffer wo would
-Abolish -buffer viment environment
+Abolish -buffer env environment
 Abolish -buffer wout without
 
 Abolish -buffer praps perhaps

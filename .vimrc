@@ -401,7 +401,7 @@ let g:ycm_rust_src_path = $RUST_SRC_PATH
 nnoremap <silent> <Leader>b :make build  <CR> <bar> :copen <CR>
 nnoremap <silent> <Leader>r :make run  <CR> <bar> :copen <CR>
 nnoremap <silent> <Leader>l :make clippy --all  <CR> <bar> :copen <CR>
-nnoremap <silent> <Leader><leader> :make clippy --all -- -W clippy::all -W clippy::pedantic  -W clippy::nursery -D warnings <CR> <bar> :copen <CR>
+nnoremap <silent> <Leader><leader>l :make clippy --all -- -W clippy::all -W clippy::pedantic  -W clippy::nursery -D warnings <CR> <bar> :copen <CR>
 nnoremap <silent> <Leader>t :make test -- --nocapture <CR>
 let g:rustfmt_autosave = 1
 let g:rustfmt_fail_silently = 1

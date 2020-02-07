@@ -1,0 +1,7 @@
+{
+  "rust-analyzer.enableCargoWatchOnStartup": "enabled",
+  "rust-analyzer.cargo-watch.allTargets": true,
+"codeLens.enable" : true,
+ "diagnostic.virtualText" : false,
+"coc.preferences.enableFloatHighlight" : false
+}
